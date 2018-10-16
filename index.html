@@ -1,0 +1,81 @@
+ <?php
+   include("config.php");
+   $error = '';
+   session_start();
+
+   if($_SERVER["REQUEST_METHOD"] == "POST") {
+      $myusername = mysqli_real_escape_string($con,$_POST['usuario']);
+      $mypassword = mysqli_real_escape_string($con,$_POST['password']); 
+      
+      $sql = "SELECT id, id_page FROM usuarios WHERE username = '$myusername' and password = '$mypassword'";
+      $result = mysqli_query($con,$sql);
+      $row = mysqli_fetch_array($result, MYSQLI_NUM);
+      $active = $row['active'];
+      $count = mysqli_num_rows($result);
+      echo "qwerty"."$count";
+
+      $sql2 = "SELECT * FROM `tbl_sesion` WHERE `usuario` = '$myusername' and `password` = '$mypassword'";
+      $result2 = mysqli_query($con,$sql2);
+      $row2 = mysqli_fetch_array($result2, MYSQLI_NUM);
+      $count2 = mysqli_num_rows($result2);
+
+      if($count == 1 || $count2 == 1) {
+         $_SESSION['myusername']="active";
+         $_SESSION['login_user'] = $myusername;
+         header("location: forms-basic.html");
+      }else {
+        $message = "Usuario o Contraseña incorrecto.\\nIntentalo de nuevo.";  
+        echo "<script type='text/javascript'>alert('$message');</script>";
+      }
+   }
+
+?>
+  <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Marketing for You</title>
+  <!-- Bootstrap core CSS-->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom fonts for this template-->
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin.css" rel="stylesheet">
+</head>
+
+<body class="bg-dark">
+  <div class="container">
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header">Login</div>
+      <div class="card-body">
+        <form  action = "" method = "post">
+          <div class="form-group">
+            <label for="idusername">Usuario</label>
+            <input class="form-control" id="idusuario" type="text" name="usuario" placeholder="Introdusca su Usuario">
+          </div>
+          <div class="form-group">
+            <label for="idpas">Contraseña</label>
+            <input class="form-control" id="idpass" name="password" type="password" placeholder="Password">
+          </div>
+          <input class="btn btn-primary btn-block" type = "submit" value = "Login"/>
+        </form>
+     <!--   <div class="text-center">
+          <a class="d-block small mt-3" href="pagina-registro-independiente.php">Registrar una Cuenta</a>
+          <a class="d-block small mt-3" href="pagina-registro-maestra.php">Registrar una Cuenta Maestra</a>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+</body>
+
+</html>
